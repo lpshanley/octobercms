@@ -3,6 +3,10 @@ services:
   web:
     image: lpshanley/octobercms
     ports:
-      - "80:80"
-    #environment:
-        
+      - 80:80
+    environment:
+      - APP_KEY=ABCDEFGHIJKLMNOPQRSTUV0123456789
+      - OCTOBER_PLUGINS=RainLab.User;
+    volumes:
+      - ./data/themes:/var/www/html/themes
+      - ./data/plugins:/var/www/html/plugins

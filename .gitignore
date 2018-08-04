@@ -1,2 +1,2 @@
 # Instance Data form docker-compose
-.data/
+data/*
