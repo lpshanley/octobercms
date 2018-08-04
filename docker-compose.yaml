@@ -1,7 +1,7 @@
 version: '2'
 services:
   web:
-    image: lpshanley/octobercms
+    image: lpshanley/octobercms:latest
     ports:
       - 80:80
     environment:
