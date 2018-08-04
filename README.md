@@ -206,3 +206,89 @@ $ docker exec containername artisan plugin:install aspendigital.resizer
 # `tinker` invokes `php artisan tinker`. Requires `-it` for an interactive shell
 $ docker exec -it containername tinker
 ```
+
+## App Environment
+
+By default, `APP_ENV` is set to `docker`.
+
+On image build, a default `.env` is [created](https://github.com/aspendigital/docker-octobercms/blob/d3b288b9fe0606e32ac3d6466affd2996394bdca/Dockerfile.template#L52) and [config files](https://github.com/aspendigital/docker-octobercms/tree/master/config/docker) for the `docker` app environment are copied to `/var/www/html/config/docker`. Environment variables can be used to override the included default settings via [`docker run`](https://docs.docker.com/engine/reference/run/#env-environment-variables) or [`docker-compose`](https://docs.docker.com/compose/environment-variables/).
+
+> __Note__: October CMS settings stored in a site's database override the config. Active theme, mail configuration, and other settings which are saved in the database will ultimately override configuration values.
+
+#### PHP configuration
+
+Recommended [settings for opcache and PHP are applied on image build](https://github.com/aspendigital/docker-octobercms/blob/f3c545fd84e293a67e63f86bf94f2bf2ab22ca15/Dockerfile.template#L9-L25).
+
+Values set in `docker-oc-php.ini` can be overridden by passing one of the supported PHP environment variables defined below.
+
+To customize the PHP configuration further, add or replace `.ini` files found in `/usr/local/etc/php/conf.d/`.
+
+### Environment Variables
+
+
+Environment variables can be passed to both docker-compose and October CMS.
+
+ > Database credentials and other sensitive information should not be committed to the repository. Those required settings should be outlined in __.env.example__
+
+ > Passing environment variables via Docker can be problematic in production. A `phpinfo()` call may leak secrets by outputting environment variables.  Consider mounting a `.env` volume or copying it to the container directly.
+
+
+#### Docker Entrypoint
+
+The following variables trigger actions run by the [entrypoint script](https://github.com/lpshanley/octobercms/blob/master/docker-oc-entrypoint) at runtime.
+
+| Variable | Default | Action |
+| -------- | ------- | ------ |
+| ENABLE_CRON | false | `true` starts a cron process within the container |
+| FWD_REMOTE_IP | false | `true` enables remote IP forwarding from proxy (Apache) |
+| GIT_CHECKOUT |  | Checkout branch, tag, commit within the container. Runs `git checkout $GIT_CHECKOUT` |
+| GIT_MERGE_PR |  | Pass GitHub pull request number to merge PR within the container for testing |
+| INIT_PLUGINS | false | `true` runs composer install in plugins folders where no 'vendor' folder exists. `force` runs composer install regardless. Helpful when using git submodules for plugins. |
+| PHP_DISPLAY_ERRORS | off | Override value for `display_errors` in docker-oc-php.ini |
+| PHP_POST_MAX_SIZE | 32M | Override value for `post_max_size` in docker-oc-php.ini |
+| PHP_MEMORY_LIMIT | 128M | Override value for `memory_limit` in docker-oc-php.ini |
+| PHP_UPLOAD_MAX_FILESIZE | 32M | Override value for `upload_max_filesize` in docker-oc-php.ini |
+| UNIT_TEST |  | `true` runs all October CMS unit tests. Pass test filename to run a specific test. |
+| VERSION_INFO | false | `true` outputs container current commit, php version, and dependency info on start |
+
+#### October CMS app environment config
+
+List of variables used in `config/docker`
+
+| Variable | Default |
+| -------- | ------- |
+| APP_DEBUG | false |
+| APP_URL | http://localhost |
+| APP_KEY | 0123456789ABCDEFGHIJKLMNOPQRSTUV |
+| CACHE_STORE | file |
+| CMS_ACTIVE_THEME | demo |
+| CMS_EDGE_UPDATES | false  (true in `edge` images) |
+| CMS_DISABLE_CORE_UPDATES | true |
+| CMS_BACKEND_SKIN | Backend\Skins\Standard |
+| CMS_LINK_POLICY | detect |
+| CMS_BACKEND_FORCE_SECURE | false |
+| DB_TYPE | sqlite |
+| DB_SQLITE_PATH | storage/database.sqlite |
+| DB_HOST | mysql* |
+| DB_PORT | - |
+| DB_DATABASE | - |
+| DB_USERNAME | - |
+| DB_PASSWORD | - |
+| DB_REDIS_HOST | redis* |
+| DB_REDIS_PASSWORD | null |
+| DB_REDIS_PORT | 6379 |
+| MAIL_DRIVER | log |
+| MAIL_SMTP_HOST | - |
+| MAIL_SMTP_PORT | 587 |
+| MAIL_FROM_ADDRESS | no-reply@domain.tld |
+| MAIL_FROM_NAME | October CMS |
+| MAIL_SMTP_ENCRYPTION | tls |
+| MAIL_SMTP_USERNAME | - |
+| MAIL_SMTP_PASSWORD | - |
+| QUEUE_DRIVER | sync |
+| SESSION_DRIVER | file |
+| TZ\** | UTC |
+
+<small>\* When using a container to serve a database, set the host value to the service name defined in your docker-compose.yml</small>
+
+<small>\** Timezone applies to both container and October CMS  config</small>
