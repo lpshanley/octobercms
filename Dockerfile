@@ -70,7 +70,7 @@ RUN echo 'exec php artisan "$@"' > /usr/local/bin/artisan && \
   chmod +x /usr/local/bin/artisan /usr/local/bin/tinker /usr/local/bin/october
 
 COPY docker-entrypoint /usr/local/bin/
-RUN ln -s usr/local/bin/docker-entrypoint /entrypoint #backwards compatability
+#RUN ln -s usr/local/bin/docker-entrypoint /entrypoint #backwards compatability
 
 ENTRYPOINT ["docker-entrypoint"]
 CMD ["apache2-foreground"]
