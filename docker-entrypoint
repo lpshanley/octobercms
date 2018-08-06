@@ -112,11 +112,4 @@ if [ ! -z "$PHP_UPLOAD_MAX_FILESIZE" ]; then
   sed -i "/upload_max_filesize=*/c\upload_max_filesize=$PHP_UPLOAD_MAX_FILESIZE" /usr/local/etc/php/conf.d/docker-oc-php.ini
 fi
 
-# Install plugins if they are identified
-#IFS=';' read -ra PLUGIN <<< "$OCTOBER_PLUGINS"
-#for i in "${PLUGIN[@]}"; do
-  #php artisan plugin:install $i
-#done
-#php artisan plugin:install RainLab.User
-
 exec "$@"
