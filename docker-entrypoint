@@ -47,12 +47,6 @@ if [ ! -z "$GIT_MERGE_PR" ]; then
   echo "---"
 fi
 
-# Install plugins if they are identified
-IFS=';' read -ra PLUGIN <<< "$OCTOBER_PLUGINS"
-for i in "${PLUGIN[@]}"; do
-    php artisan plugin:install $i
-done
-
 # Runs all October CMS unit tests. Pass test filename to run a specific test.
 if [ ! -z "$UNIT_TEST" ]; then
   echo -e "October CMS Unit Test..."
@@ -117,5 +111,12 @@ if [ ! -z "$PHP_UPLOAD_MAX_FILESIZE" ]; then
   echo "php.ini set upload_max_filesize=$PHP_UPLOAD_MAX_FILESIZE"
   sed -i "/upload_max_filesize=*/c\upload_max_filesize=$PHP_UPLOAD_MAX_FILESIZE" /usr/local/etc/php/conf.d/docker-oc-php.ini
 fi
+
+# Install plugins if they are identified
+#IFS=';' read -ra PLUGIN <<< "$OCTOBER_PLUGINS"
+#for i in "${PLUGIN[@]}"; do
+  #php artisan plugin:install $i
+#done
+php artisan plugin:install RainLab.User
 
 exec "$@"
