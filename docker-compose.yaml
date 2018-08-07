@@ -1,12 +1,11 @@
 version: '2'
 services:
   web:
-    image: lpshanley/octobercms:latest
+    build: .
     ports:
-      - 80:80
+      - "80:80"
     environment:
-      - APP_KEY=ABCDEFGHIJKLMNOPQRSTUV0123456789
       - OCTOBER_PLUGINS=RainLab.User;
-    volumes:
-      - ./data/themes:/var/www/html/themes
-      - ./data/plugins:/var/www/html/plugins
+      - GIT_THEMES=https://github.com/lpshanley/FW-Dashboard.git;
+      - CMS_ACTIVE_THEME=FW-Dashboard
+      - OCTOBER_CMS_BACKEND_URI=admin

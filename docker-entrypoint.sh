@@ -113,4 +113,61 @@ if [ ! -z "$PHP_UPLOAD_MAX_FILESIZE" ]; then
   sed -i "/upload_max_filesize=*/c\upload_max_filesize=$PHP_UPLOAD_MAX_FILESIZE" /usr/local/etc/php/conf.d/docker-oc-php.ini
 fi
 
+# Add git host keys to known hosts
+IFS=';' read -ra KEY <<< "$GIT_HOSTS"
+for i in "${KEY[@]}"; do
+  ssh-keyscan -H $i >> /root/.ssh/known_hosts
+done
+
+# Install git themes if they are identified
+IFS=';' read -ra THEME <<< "$GIT_THEMES"
+for i in "${THEME[@]}"; do
+  basename=$(basename $i)
+  repo=${basename%.*}
+  # Only clone if it doesn't already exist
+  if ! [ -e themes/$repo ]; then
+    (cd themes && git clone $i)
+  fi
+done
+
+# Install git plugins if they are identified
+IFS=';' read -ra PLUGIN <<< "$GIT_PLUGINS"
+for i in "${PLUGIN[@]}"; do
+  url_without_suffix="${i%.*}"
+  reponame="$(basename "${url_without_suffix}")"
+  hostname="$(basename "${url_without_suffix%/${reponame}}")"
+  namespace="${hostname##*:}"
+  # Only clone if it doesn't already exist
+  if ! [ -e plugins/$namespace/$reponame ]; then
+    (cd plugins && git clone $i $namespace/$reponame)
+  fi
+done
+
+# Install plugins if they are identified
+IFS=';' read -ra PLUGIN <<< "$OCTOBER_PLUGINS"
+for i in "${PLUGIN[@]}"; do
+  php artisan plugin:install $i
+done
+
+# Install themes if they are identified
+IFS=';' read -ra THEME <<< "$OCTOBER_THEMES"
+for i in "${THEME[@]}"; do
+  php artisan theme:install $i
+done
+
+# Pull latest code from all plugin and theme git repos
+php artisan october:util git pull
+
+# Change permissions for dirs
+find ./themes -type d -exec chmod 755 {} \;
+#Change Permissions for files
+find ./themes -type f -exec chmod 664 {} \;
+chown -R www-data:www-data themes 
+
+# Change permissions for dirs
+find ./plugins -type d -exec chmod 755 {} \;
+#Change Permissions for files
+find ./plugins -type f -exec chmod 664 {} \;
+chown -R www-data:www-data plugins 
+
 exec "$@"
