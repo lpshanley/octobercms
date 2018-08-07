@@ -1,4 +1,5 @@
 #!/bin/bash
+
 set -e
 
 # Display current commit, php version, and dependency info
