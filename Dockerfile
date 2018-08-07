@@ -1,6 +1,6 @@
 FROM php:7.1-apache
 
-RUN apt-get update && apt-get install -y vim git-core jq cron \
+RUN apt-get update && apt-get install -y cron git-core jq vim \
   libjpeg-dev libpng-dev libpq-dev libsqlite3-dev && \
   rm -rf /var/lib/apt/lists/* && \
   docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr && \
@@ -69,7 +69,7 @@ RUN echo 'exec php artisan "$@"' > /usr/local/bin/artisan && \
   sed -i '1s;^;#!/bin/bash\n[ "$PWD" != "/var/www/html" ] \&\& echo " - Helper must be run from /var/www/html" \&\& exit 1\n;' /usr/local/bin/artisan /usr/local/bin/tinker /usr/local/bin/october && \
   chmod +x /usr/local/bin/artisan /usr/local/bin/tinker /usr/local/bin/october
 
-COPY docker-entrypoint /usr/local/bin/
+COPY docker-oc-entrypoint /usr/local/bin/
 
-ENTRYPOINT ["docker-entrypoint"]
+ENTRYPOINT ["docker-oc-entrypoint"]
 CMD ["apache2-foreground"]
