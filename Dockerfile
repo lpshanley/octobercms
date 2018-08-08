@@ -69,9 +69,9 @@ RUN echo 'exec php artisan "$@"' > /usr/local/bin/artisan && \
   sed -i '1s;^;#!/bin/bash\n[ "$PWD" != "/var/www/html" ] \&\& echo " - Helper must be run from /var/www/html" \&\& exit 1\n;' /usr/local/bin/artisan /usr/local/bin/tinker /usr/local/bin/october && \
   chmod +x /usr/local/bin/artisan /usr/local/bin/tinker /usr/local/bin/october
 
-COPY docker-entrypoint.sh /usr/local/bin/
+COPY ./docker-entrypoint /usr/local/bin/
 
-RUN chmod 777 /usr/local/bin/docker-entrypoint.sh
+RUN chmod 755 /usr/local/bin/docker-entrypoint
 
-ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint"]
 CMD ["apache2-foreground"]
