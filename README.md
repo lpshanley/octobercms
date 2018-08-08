@@ -7,6 +7,8 @@ Based on [official docker PHP images](https://hub.docker.com/_/php), images incl
 - [Supported Tags](https://github.com/lpshanley/octobercms#supported-tags)
 - [Quick Start](https://github.com/lpshanley/octobercms#quick-start)
 - [Working with Local Files](https://github.com/lpshanley/octobercms#working-with-local-files)
+- [October Themes and Plugins](https://github.com/lpshanley/octobercms#october-themes-and-plugins)
+- [Git Themes and Plugins](https://github.com/lpshanley/octobercms#git-themes-and-plugins)
 - [Database Support](https://github.com/lpshanley/octobercms#database-support)
 - [Cron](https://github.com/lpshanley/octobercms#cron)
 - [Command Line Tasks](https://github.com/lpshanley/octobercms#command-line-tasks)
@@ -77,6 +79,26 @@ $ docker-compose up -d # start services defined in `docker-compose.yml` in the b
 $ docker-compose down # stop and destroy
 ```
 
+## October Themes and Plugins
+Themes and/or plugins can be installed from the marketplace with the following environment variables:
+* `-e OCTOBER_THEMES=...` (defaults to null)
+* `-e OCTOBER_PLUGINS=...` (defaults to null)
+
+Use semicolon separated list for multiple themes or plugins (e.g. `-e OCTOBER_PLUGINS="RainLab.Blog;RainLab.GoogleAnalytics"`)
+
+## Git Themes and Plugins
+Themes and/or plugins can be installed from the git repositories with the following environment variables:
+* `-e GIT_HOSTS=...` (defaults to null, used to add git servers to /root/.ssh/known_hosts, only needed for ssh)
+* `-e GIT_THEMES=...` (defaults to null)
+* `-e GIT_PLUGINS=...` (defaults to null)
+
+Use semicolon separated list for multiple themes or plugins (e.g. `-e GIT_THEMES="git@gitlab.com:path/repo.git"`)
+
+If you use a private repository, then you should map your private key to the container (e.g `-v ~/.ssh/id_rsa:/root/.ssh/id_rsa`)
+
+Another solution is to get an "Personal Access Token" from your repository provider and use https instead (e.g. `-e GIT_THEMES="https://username:token@gitlab.com:path/repo.git"`)
+
+Please note that for Plugins, it will determine namespace based on your repository path (e.g `git@gitlab.com:mycompany/blog.git` will clone into `/plugins/mycompany/blog`)
 
 ## Database Support
 
@@ -243,6 +265,11 @@ The following variables trigger actions run by the [entrypoint script](https://g
 | FWD_REMOTE_IP | false | `true` enables remote IP forwarding from proxy (Apache) |
 | GIT_CHECKOUT |  | Checkout branch, tag, commit within the container. Runs `git checkout $GIT_CHECKOUT` |
 | GIT_MERGE_PR |  | Pass GitHub pull request number to merge PR within the container for testing |
+| OCTOBER_THEMES | null | List of offical october themes to install on build |
+| OCTOBER_PLUGINS | null | List of official october plugins to install on build |
+| GIT_HOSTS | null | used to add git servers to /root/.ssh/known_hosts, only needed for ssh |
+| GIT_THEMES | null | ex `https://github.com/<user>/<repo>.git` pulls theme repository from git into the project |
+| GIT_PLUGINS | null | ex `https://github.com/<user>/<repo>.git` pulls plugin repository from git into the project |
 | INIT_PLUGINS | false | `true` runs composer install in plugins folders where no 'vendor' folder exists. `force` runs composer install regardless. Helpful when using git submodules for plugins. |
 | PHP_DISPLAY_ERRORS | off | Override value for `display_errors` in docker-oc-php.ini |
 | PHP_POST_MAX_SIZE | 32M | Override value for `post_max_size` in docker-oc-php.ini |
@@ -285,6 +312,7 @@ List of variables used in `config/docker`
 | MAIL_SMTP_ENCRYPTION | tls |
 | MAIL_SMTP_USERNAME | - |
 | MAIL_SMTP_PASSWORD | - |
+| OCTOBER_CMS_BACKEND_URI | 'backend' |
 | QUEUE_DRIVER | sync |
 | SESSION_DRIVER | file |
 | TZ\** | UTC |
