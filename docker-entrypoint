@@ -159,10 +159,16 @@ done
 php artisan october:util git pull
 
 # Change permissions for dirs
-find ./ -type d -exec chmod 755 {} \;
+find ./plugins -type d -exec chmod 755 {} \;
 #Change Permissions for files
-find ./ -type f -exec chmod 664 {} \;
-chown -R www-data:www-data ./ 
+find ./plugins -type f -exec chmod 664 {} \;
+chown -R www-data:www-data ./plugins
+
+# Change permissions for dirs
+find ./themes -type d -exec chmod 755 {} \;
+#Change Permissions for files
+find ./themes -type f -exec chmod 664 {} \;
+chown -R www-data:www-data ./themes
 
 php artisan october:up
 
