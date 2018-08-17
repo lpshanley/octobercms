@@ -32,10 +32,10 @@ RUN a2enmod rewrite
 
 COPY config/docker /usr/src/octobercms-config-docker
 
-ENV OCTOBERCMS_TAG v1.0.437
-ENV OCTOBERCMS_CHECKSUM e0230dac67b0ece92aaf161b4f097dcfacc7b940
-ENV OCTOBERCMS_CORE_BUILD 437
-ENV OCTOBERCMS_CORE_HASH d4a4e1f641e333ff5c26037f86cfe619
+ENV OCTOBERCMS_TAG v1.0.440
+ENV OCTOBERCMS_CHECKSUM cf8cfbc16fb3845404e7570cda8544e64eb56ae2
+ENV OCTOBERCMS_CORE_BUILD 440
+ENV OCTOBERCMS_CORE_HASH 6a1c5b710fc6fadf0cf96b98cd145817
 
 RUN curl -o octobercms.tar.gz -fSL https://codeload.github.com/octobercms/october/tar.gz/{$OCTOBERCMS_TAG} && \
   echo "$OCTOBERCMS_CHECKSUM *octobercms.tar.gz" | sha1sum -c - && \
