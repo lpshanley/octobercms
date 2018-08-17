@@ -9,3 +9,4 @@ services:
       - GIT_THEMES=https://github.com/lpshanley/FW-Dashboard.git;
       - CMS_ACTIVE_THEME=FW-Dashboard
       - OCTOBER_CMS_BACKEND_URI=admin
+      - APP_DEBUG=true

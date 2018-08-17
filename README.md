@@ -56,7 +56,7 @@ $ git clone git@github.com:aspendigital/oc-resizer-plugin.git
 $ cd oc-resizer-plugin
 $ docker run -p 80:80 --rm \
   -v $(pwd):/var/www/html/plugins/aspendigital/resizer \
-  aspendigital/octobercms:latest
+  lpshanley/octobercms:latest
 ```
 
 Save yourself some keyboards strokes, utilize [docker-compose](https://docs.docker.com/compose/overview/) by introducing a `docker-compose.yml` file to your project folder:
@@ -154,6 +154,30 @@ Provision a new database with `october:up`:
 $ docker-compose up -d
 $ docker-compose exec web php artisan october:up
 ```
+
+## Storage
+
+Storage will require the October.Drivers; plugin which is installed in this image by default. Example below is for amazon s3 storage however rackspace env details are also available below.
+
+#### Amazon S3
+```yml
+#docker-compose.yml
+version: '2.2'
+services:
+  web:
+    image: lpshanley/octobercms:latest
+    ports:
+      - 80:80
+    environment:
+      - FS_DEFAULT=s3
+      - FS_S3_KEY=amazonprovisionedkey
+      - FS_S3_SECRET=amazonprovisionedsecret
+      - FS_S3_REGION=us-east-2
+      - FS_S3_BUCKET=example-bucket
+      - FS_UPLOAD_PATH=https://us-east-2.amazonaws.com/example-bucket/uploads
+      - FS_MEDIA_PATH=https://us-east-2.amazonaws.com/example-bucket/media
+```
+Rackspace ENV details are available below.
 
 ## Cron
 
@@ -304,6 +328,19 @@ List of variables used in `config/docker`
 | DB_REDIS_HOST | redis* |
 | DB_REDIS_PASSWORD | null |
 | DB_REDIS_PORT | 6379 |
+| FS_CLOUD | s3 |
+| FS_DEFAULT | local |
+| FS_PATH_UPLOAD | /storage/app/uploads |
+| FS_PATH_MEDIA | /storage/app/media |
+| FS_S3_BUCKET | your-bucket |
+| FS_S3_KEY | your-key |
+| FS_S3_REGION | your-region |
+| FS_S3_SECRET | your-secret |
+| FS_RS_CONTAINER | your-container |
+| FS_RS_ENDPOINT | https://identity.api.rackspacecloud.com/v2.0/ |
+| FS_RS_KEY | your-key |
+| FS_RS_REGION | IAD |
+| FS_RS_USERNAME | your-username |
 | MAIL_DRIVER | log |
 | MAIL_SMTP_HOST | - |
 | MAIL_SMTP_PORT | 587 |
