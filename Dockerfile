@@ -41,14 +41,11 @@ RUN curl -o octobercms.tar.gz -fSL https://codeload.github.com/octobercms/octobe
   echo "$OCTOBERCMS_CHECKSUM *octobercms.tar.gz" | sha1sum -c - && \
   tar --strip=1 -xzf octobercms.tar.gz && \
   rm octobercms.tar.gz && \
-  echo "Update composer.json: Set explicit build references for october module dependencies" && \
-  sed -i.orig "s/\(\"october\/\([rain|system|backend|cms]*\)\": \"\(~1.0\)\"\)/\"october\/\2\": \"<=${OCTOBERCMS_TAG#v}\"/g" composer.json && \
-  egrep -o "['\"]october\/[rain|system|backend|cms]*['\"]\s*:\s*['\"](.+?)['\"]" composer.json && \
   composer install --no-interaction --prefer-dist --no-scripts && \
   echo 'APP_ENV=docker' > .env && \
   mv /usr/src/octobercms-config-docker config/docker && \
+  sed -i "s/'CMS_EDGE_UPDATES', false/'CMS_EDGE_UPDATES', true/" config/docker/cms.php && \
   touch storage/database.sqlite && \
-  chmod 666 storage/database.sqlite && \
   php artisan october:up && \
   php -r "use System\\Models\\Parameter; \
     require __DIR__.'/bootstrap/autoload.php'; \
