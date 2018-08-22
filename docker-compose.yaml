@@ -5,8 +5,4 @@ services:
     ports:
       - "80:80"
     environment:
-      - OCTOBER_PLUGINS=RainLab.User;
-      - GIT_THEMES=https://github.com/lpshanley/FW-Dashboard.git;
-      - CMS_ACTIVE_THEME=FW-Dashboard
-      - OCTOBER_CMS_BACKEND_URI=admin
       - APP_DEBUG=true

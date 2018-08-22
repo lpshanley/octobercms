@@ -158,18 +158,4 @@ done
 # Pull latest code from all plugin and theme git repos
 php artisan october:util git pull
 
-# Change permissions for dirs
-find ./plugins -type d -exec chmod 755 {} \;
-#Change Permissions for files
-find ./plugins -type f -exec chmod 664 {} \;
-chown -R www-data:www-data ./plugins
-
-# Change permissions for dirs
-find ./themes -type d -exec chmod 755 {} \;
-#Change Permissions for files
-find ./themes -type f -exec chmod 664 {} \;
-chown -R www-data:www-data ./themes
-
-php artisan october:up
-
 exec "$@"
