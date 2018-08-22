@@ -32,30 +32,31 @@ RUN a2enmod rewrite
 
 COPY config/docker /usr/src/octobercms-config-docker
 
-ENV OCTOBERCMS_TAG v1.0.440
-ENV OCTOBERCMS_CHECKSUM cf8cfbc16fb3845404e7570cda8544e64eb56ae2
-ENV OCTOBERCMS_CORE_BUILD 440
-ENV OCTOBERCMS_CORE_HASH 6a1c5b710fc6fadf0cf96b98cd145817
+ENV OCTOBERCMS_TAG v1.0.437
+ENV OCTOBERCMS_CHECKSUM e0230dac67b0ece92aaf161b4f097dcfacc7b940
+ENV OCTOBERCMS_CORE_BUILD 437
+ENV OCTOBERCMS_CORE_HASH d4a4e1f641e333ff5c26037f86cfe619
 
-RUN curl -o octobercms.tar.gz -fSL https://codeload.github.com/octobercms/october/tar.gz/{$OCTOBERCMS_TAG} && \
-  echo "$OCTOBERCMS_CHECKSUM *octobercms.tar.gz" | sha1sum -c - && \
-  tar --strip=1 -xzf octobercms.tar.gz && \
-  rm octobercms.tar.gz && \
+RUN git clone https://github.com/octobercms/october.git -b $OCTOBERCMS_TAG --depth 1 . && \
   composer install --no-interaction --prefer-dist --no-scripts && \
+  composer clearcache && \
+  git status && git reset --hard HEAD && \
+  rm -rf .git && \
   echo 'APP_ENV=docker' > .env && \
   mv /usr/src/octobercms-config-docker config/docker && \
-  sed -i "s/'CMS_EDGE_UPDATES', false/'CMS_EDGE_UPDATES', true/" config/docker/cms.php && \
   touch storage/database.sqlite && \
+  chmod 666 storage/database.sqlite && \
   php artisan october:up && \
-  php -r "use System\\Models\\Parameter; \
+  php artisan plugin:install october.drivers && \
+  chown -R www-data:www-data /var/www/html && \
+  find . -type d \( -path './plugins' -or  -path './storage' -or  -path './themes' -or  -path './plugins/*' -or  -path './storage/*' -or  -path './themes/*' \) -exec chmod g+ws {} \;
+
+RUN php -r "use System\\Models\\Parameter; \
     require __DIR__.'/bootstrap/autoload.php'; \
     \$app = require_once __DIR__.'/bootstrap/app.php'; \
     \$app->make('Illuminate\\Contracts\\Console\\Kernel')->bootstrap(); \
     Parameter::set(['system::core.build'=>getenv('OCTOBERCMS_CORE_BUILD'), 'system::core.hash'=>getenv('OCTOBERCMS_CORE_HASH')]); \
-    echo \"October CMS \\n Build: \",Parameter::get('system::core.build'), \"\\n Hash: \", Parameter::get('system::core.hash'), \"\\n\";" && \
-  php artisan plugin:install october.drivers && \
-  chown -R www-data:www-data /var/www/html && \
-  find . -type d \( -path './plugins' -or  -path './storage' -or  -path './themes' -or  -path './plugins/*' -or  -path './storage/*' -or  -path './themes/*' \) -exec chmod g+ws {} \;
+    echo \"October CMS \\n Build: \",Parameter::get('system::core.build'), \"\\n Hash: \", Parameter::get('system::core.hash'), \"\\n\";"
 
 RUN echo "* * * * * /usr/local/bin/php /var/www/html/artisan schedule:run > /proc/1/fd/1 2>/proc/1/fd/2" > /etc/cron.d/october-cron && \
   crontab /etc/cron.d/october-cron
@@ -65,7 +66,7 @@ RUN echo 'exec php artisan "$@"' > /usr/local/bin/artisan && \
   echo '[ $# -eq 0 ] && exec php artisan october || exec php artisan october:"$@"' > /usr/local/bin/october && \
   sed -i '1s;^;#!/bin/bash\n[ "$PWD" != "/var/www/html" ] \&\& echo " - Helper must be run from /var/www/html" \&\& exit 1\n;' /usr/local/bin/artisan /usr/local/bin/tinker /usr/local/bin/october && \
   chmod +x /usr/local/bin/artisan /usr/local/bin/tinker /usr/local/bin/october
-
+  
 COPY ./docker-entrypoint /usr/local/bin/
 
 RUN chmod 755 /usr/local/bin/docker-entrypoint
