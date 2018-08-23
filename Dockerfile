@@ -49,7 +49,7 @@ RUN git clone https://github.com/octobercms/october.git -b $OCTOBERCMS_TAG --dep
   php artisan october:up && \
   php artisan plugin:install october.drivers && \
   chown -R www-data:www-data /var/www/html && \
-  find . -type d \( -path './plugins' -or  -path './storage' -or  -path './themes' -or  -path './plugins/*' -or  -path './storage/*' -or  -path './themes/*' \) -exec chmod g+ws {} \;
+  find . -type d \( -path './plugins' -or  -path './storage' -or  -path './themes' -or  -path './plugins/*' -or  -path './storage/*' -or  -path './themes/*' \) -exec chmod g+rwxs {} \;
 
 RUN php -r "use System\\Models\\Parameter; \
     require __DIR__.'/bootstrap/autoload.php'; \
@@ -74,7 +74,8 @@ RUN chmod 755 /usr/local/bin/docker-entrypoint
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint"]
 
 RUN chown -R www-data:www-data /var/www/html && \
-  find . -type d \( -path './plugins' -or  -path './themes' -or  -path './plugins/*' -or  -path './themes/*' \) -exec chmod g+ws {} \;
+  find . -type d \( -path './plugins' -or  -path './themes' -or  -path './plugins/*' -or  -path './themes/*' \) -exec chmod 755 {} \; && \
+  find . -type f \( -path './plugins' -or  -path './themes' -or  -path './plugins/*' -or  -path './themes/*' \) -exec chmod 644 {} \;
   
 RUN php artisan october:up
 
