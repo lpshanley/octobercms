@@ -73,9 +73,4 @@ RUN chmod 755 /usr/local/bin/docker-entrypoint
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint"]
 
-RUN chown -R www-data:www-data /var/www/html && \
-  chmod -R 775 themes plugins
-  
-RUN php artisan october:up
-
 CMD ["apache2-foreground"]
