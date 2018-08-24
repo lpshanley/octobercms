@@ -74,8 +74,7 @@ RUN chmod 755 /usr/local/bin/docker-entrypoint
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint"]
 
 RUN chown -R www-data:www-data /var/www/html && \
-  find . -type d \( -path './plugins' -or  -path './themes' -or  -path './plugins/*' -or  -path './themes/*' \) -exec chmod 775 {} \; && \
-  find . -type f \( -path './plugins' -or  -path './themes' -or  -path './plugins/*' -or  -path './themes/*' \) -exec chmod 664 {} \;
+  chmod -R 775 themes plugins
   
 RUN php artisan october:up
 
