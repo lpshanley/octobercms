@@ -164,4 +164,7 @@ php artisan october:util git pull
 
 php artisan october:up
 
+chown www-data:www-data -R storage 
+chmod 775 -R storage
+
 exec "$@"
