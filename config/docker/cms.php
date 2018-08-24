@@ -14,7 +14,7 @@ return [
     'backendForceSecure' => env('CMS_BACKEND_FORCE_SECURE', false),
     'backendUri' => env('OCTOBER_CMS_BACKEND_URI') ?: 'backend',
     'defaultMask' => [
-        'file' => env('CMS_DEFAULT_MASK_FILE', '664'),
+        'file' => env('CMS_DEFAULT_MASK_FILE', '775'),
         'folder' =>  env('CMS_DEFAULT_MASK_FOLDER', '775'),
     ],
     

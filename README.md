@@ -308,9 +308,10 @@ List of variables used in `config/docker`
 
 | Variable | Default |
 | -------- | ------- |
-| APP_DEBUG | false |
-| APP_URL | http://localhost |
+| APP_DEBUG | false 
 | APP_KEY | 0123456789ABCDEFGHIJKLMNOPQRSTUV |
+| APP_URL | http://localhost |
+| APP_NAME | OctoberCMS |
 | CACHE_STORE | file |
 | CMS_ACTIVE_THEME | demo |
 | CMS_EDGE_UPDATES | false  (true in `edge` images) |
@@ -352,6 +353,10 @@ List of variables used in `config/docker`
 | OCTOBER_CMS_BACKEND_URI | 'backend' |
 | QUEUE_DRIVER | sync |
 | SESSION_DRIVER | file |
+| SESSION_COOKIE_NAME | 'october_session' |
+| SESSION_COOKIE_PATH | '/' |
+| SESSION_COOKIE_DOMAIN | null |
+| SESSION_COOKIE_SECURE | false |
 | TZ\** | UTC |
 
 <small>\* When using a container to serve a database, set the host value to the service name defined in your docker-compose.yml</small>

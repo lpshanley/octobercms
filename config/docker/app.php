@@ -9,4 +9,7 @@ return [
     'url' => env('APP_URL', 'http://localhost'),
     'timezone' => env('TZ', 'UTC'),
     'key' => env('APP_KEY', '0123456789ABCDEFGHIJKLMNOPQRSTUV'),
+    
+    'name' =>env('APP_NAME', 'OctoberCMS')
+    
 ];
