@@ -1,0 +1,9 @@
+url: http://gateway.octobercms.com/api/core/update
+method: post
+data:
+  - build=435
+  - core=6c3e226b4d4795d518ab341b0824ec29
+  - plugins=a:0:{}
+  - server=YToyOntzOjM6InBocCI7czo2OiI3LjAuMTMiO3M6MzoidXJsIjtzOjE2OiJodHRwOi8vbG9jYWxob3N0Ijt9
+  - edge=0
+  

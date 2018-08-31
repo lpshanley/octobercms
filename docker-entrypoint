@@ -125,6 +125,8 @@ for i in "${PLUGIN[@]}"; do
   php artisan plugin:install $i
 done
 
+php artisan october:up
+
 # Add git host keys to known hosts
 IFS=';' read -ra KEY <<< "$GIT_HOSTS"
 for i in "${KEY[@]}"; do
