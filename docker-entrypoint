@@ -113,6 +113,8 @@ if [ ! -z "$PHP_UPLOAD_MAX_FILESIZE" ]; then
   sed -i "/upload_max_filesize=*/c\upload_max_filesize=$PHP_UPLOAD_MAX_FILESIZE" /usr/local/etc/php/conf.d/docker-oc-php.ini
 fi
 
+php artisan october:up
+
 # Install themes if they are identified
 IFS=';' read -ra THEME <<< "$OCTOBER_THEMES"
 for i in "${THEME[@]}"; do
@@ -124,8 +126,6 @@ IFS=';' read -ra PLUGIN <<< "$OCTOBER_PLUGINS"
 for i in "${PLUGIN[@]}"; do
   php artisan plugin:install $i
 done
-
-php artisan october:up
 
 # Add git host keys to known hosts
 IFS=';' read -ra KEY <<< "$GIT_HOSTS"
