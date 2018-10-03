@@ -48,9 +48,13 @@ RUN git clone https://github.com/octobercms/october.git -b $OCTOBERCMS_TAG --dep
   chmod 666 storage/database.sqlite && \
   php artisan october:up && \
   php artisan plugin:install october.drivers && \
+  php artisan plugin:install RainLab.User && \
+  php artisan plugin:install Vdomah.JWTAuth && \
   chown -R www-data:www-data /var/www/html && \
   find . -type d \( -path './plugins' -or  -path './storage' -or  -path './themes' -or  -path './plugins/*' -or  -path './storage/*' -or  -path './themes/*' \) -exec chmod g+rwxs {} \;
 
+RUN cp ./plugins/vdomah/jwtauth/config/auth.php ./config/auth.php
+  
 RUN php -r "use System\\Models\\Parameter; \
     require __DIR__.'/bootstrap/autoload.php'; \
     \$app = require_once __DIR__.'/bootstrap/app.php'; \
