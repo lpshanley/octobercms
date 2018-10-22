@@ -141,9 +141,10 @@ for i in "${THEME[@]}"; do
   # Only clone if it doesn't already exist
   if ! [ -e themes/$repo ]; then
     (cd themes && git clone $i)
-    chown www-data:www-data -R themes/$repo
-    chmod 775 -R themes/$repo
   fi
+  chown www-data:www-data -R themes/$repo
+  chmod 775 -R themes/$repo
+  find ./themes/$repo
 done
 
 # Install git plugins if they are identified
@@ -156,13 +157,11 @@ for i in "${PLUGIN[@]}"; do
   # Only clone if it doesn't already exist
   if ! [ -e plugins/$namespace/$reponame ]; then
     (cd plugins && git clone $i $namespace/$reponame)
-    chown www-data:www-data -R plugins/$namespace/$reponame
-    chmod 775 -R plugins/$namespace/$reponame
   fi
+  chown www-data:www-data -R plugins/$namespace/$reponame
+  chmod 775 -R plugins/$namespace/$reponame
+  find plugins/$namespace/$reponame
 done
-
-# Pull latest code from all plugin and theme git repos
-php artisan october:util git pull
 
 php artisan october:up
 
